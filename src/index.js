@@ -6,31 +6,17 @@ const path = require("path");
 // Create HTTP server
 const server = http.createServer((req, res) => {
   // GET / (Index Route)
-  // Return a frame which renders an image with four redirect buttons
+  // Return the index.html file
   if (req.url === "/") {
-    res.writeHead(200, { "Content-Type": "text/html" });
-    res.write(`
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Farcaster Frame Example</title>
-          <meta name="fc:frame" content="vNext">
-          <meta name="fc:frame:image" content="https://fc-dev-call.replit.app/image">
-      </head>
-      <body>
-          <div id="frameContainer" style="width: 600px; height: 400px;">
-              <div>
-                  <button onclick="window.location.href = 'https://www.farcaster.xyz/'">Farcaster</button>
-                  <button onclick="window.location.href = 'https://www.warpcast.com/'">Warpcast</button>
-                  <button onclick="window.location.href = 'https://docs.farcaster.xyz/'">Farcaster Docs</button>
-                  <button onclick="window.location.href = 'https://www.thehubble.xyz/'">Farcaster Hubble</button>
-              </div>
-          </div>
-      </body>
-      </html>`);
-    res.end();
+    fs.readFile(path.join(__dirname, "index.html"), (err, data) => {
+      if (err) {
+        res.writeHead(500, { "Content-Type": "text/plain" });
+        res.end("Internal Server Error");
+      } else {
+        res.writeHead(200, { "Content-Type": "text/html" });
+        res.end(data);
+      }
+    });
   } else if (req.url === "/image") {
     // GET /image
     // Return the image used in the image tag
