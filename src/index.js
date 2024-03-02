@@ -4,8 +4,8 @@ const fs = require("fs");
 const server = http.createServer((req, res) => {
   // Handle requests for the root URL "/"
   if (req.url === "/") {
-    // Read the HTML file from the main directory
-    const htmlFilePath = path.join(__dirname, "InteractiveFrame.html"); // Adjust the file path accordingly
+    // Read the HTML file from the src directory
+    const htmlFilePath = path.join(__dirname, "src", "InteractiveFrame.html"); // Adjust the file path accordingly
     fs.readFile(htmlFilePath, (err, data) => {
       if (err) {
         // If an error occurs while reading the file, return a 500 Internal Server Error
