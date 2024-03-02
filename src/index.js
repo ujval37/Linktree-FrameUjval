@@ -5,29 +5,25 @@ const path = require("path");
 
 // Create HTTP server
 const server = http.createServer((req, res) => {
-  // GET / (Index Route)
-  // Return the index.html file
+  // Handle requests for the root URL "/"
   if (req.url === "/") {
-    fs.readFile(path.join(__dirname, "index.html"), (err, data) => {
+    // Read the HTML file from the file system
+    const htmlFilePath = path.join(__dirname, "InteractiveFrame.html");
+    fs.readFile(htmlFilePath, (err, data) => {
       if (err) {
+        // If an error occurs while reading the file, return a 500 Internal Server Error
         res.writeHead(500, { "Content-Type": "text/plain" });
-        res.end("Internal Server Error");
+        res.end("500 Internal Server Error");
       } else {
+        // If the file is read successfully, return the content with a 200 OK status
         res.writeHead(200, { "Content-Type": "text/html" });
         res.end(data);
       }
     });
-  } else if (req.url === "/image") {
-    // GET /image
-    // Return the image used in the image tag
-    const imagePath = path.join(__dirname, "frame-fc.png");
-    const imageStream = fs.createReadStream(imagePath);
-    res.writeHead(200, { "Content-Type": "image/png" });
-    imageStream.pipe(res);
   } else {
-    // Catchall 404 Route
+    // For all other requests, return a 404 Not Found error
     res.writeHead(404, { "Content-Type": "text/plain" });
-    res.end("Page not found");
+    res.end("404 Not Found");
   }
 });
 
