@@ -1,59 +1,54 @@
+// Import necessary modules
 const http = require("http");
-const url = require("url");
 const fs = require("fs");
 const path = require("path");
 
+// Create HTTP server
 const server = http.createServer((req, res) => {
   // GET / (Index Route)
   // Return a frame which renders an image with four redirect buttons
   if (req.url === "/") {
     res.writeHead(200, { "Content-Type": "text/html" });
     res.write(`
-      <html>
-         <head>   
-            <meta charSet="utf-8"/>
-            <meta name="viewport" content="width=device-width"/>
-            
-            <meta property="og:title" content="FC Dev Call" />
-            <meta property='og:image' content="https://fc-dev-call.replit.app/image" />
-            <meta property="fc:frame" content="vNext" />
-            <meta property="fc:frame:image" content="https://fc-dev-call.replit.app/image" />
-            
-            <meta property="fc:frame:button:1" content="Farcaster" />
-            <meta property="fc:frame:button:1:action" content="link" />
-            <meta property="fc:frame:button:1:target" content="https://www.farcaster.xyz/" />
-            
-            <meta property="fc:frame:button:2" content="Warpcast" />
-            <meta property="fc:frame:button:2:action" content="link" />
-            <meta property="fc:frame:button:2:target" content="https://www.warpcast.com/" />
-            
-            <meta property="fc:frame:button:3" content="Farcaster Docs" />
-            <meta property="fc:frame:button:3:action" content="link" />
-            <meta property="fc:frame:button:3:target" content="https://docs.farcaster.xyz/" />
-            
-            <meta property="fc:frame:button:4" content="Farcaster Hubble" />
-            <meta property="fc:frame:button:4:action" content="link" />
-            <meta property="fc:frame:button:4:target" content=https://www.thehubble.xyz/ />
-
-          </head>
-          <body>A Farcaster Linktree Frame</body>
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Farcaster Frame Example</title>
+          <meta name="fc:frame" content="vNext">
+          <meta name="fc:frame:image" content="https://fc-dev-call.replit.app/image">
+      </head>
+      <body>
+          <div id="frameContainer" style="width: 600px; height: 400px;">
+              <div>
+                  <button onclick="window.location.href = 'https://www.farcaster.xyz/'">Farcaster</button>
+                  <button onclick="window.location.href = 'https://www.warpcast.com/'">Warpcast</button>
+                  <button onclick="window.location.href = 'https://docs.farcaster.xyz/'">Farcaster Docs</button>
+                  <button onclick="window.location.href = 'https://www.thehubble.xyz/'">Farcaster Hubble</button>
+              </div>
+          </div>
+      </body>
       </html>`);
     res.end();
-
+  } else if (req.url === "/image") {
     // GET /image
     // Return the image used in the image tag
-  } else if (req.url === "/image") {
     const imagePath = path.join(__dirname, "frame-fc.png");
     const imageStream = fs.createReadStream(imagePath);
     res.writeHead(200, { "Content-Type": "image/png" });
     imageStream.pipe(res);
-    // Catchall 404 Route
   } else {
+    // Catchall 404 Route
     res.writeHead(404, { "Content-Type": "text/plain" });
     res.end("Page not found");
   }
 });
 
-server.listen(3000, () => {
-  console.log("Server running on port 3000");
+// Define the port
+const port = process.env.PORT || 3000;
+
+// Start the server
+server.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
