@@ -11,9 +11,6 @@
         "src": "/(.*)",
         "dest": "src/index.js" // Default route to your application's entry file
       }
-    ],
-    "env": {
-      "API_KEY": "@your-api-key" // Define environment variables
-    }
+    ]
   }
   
