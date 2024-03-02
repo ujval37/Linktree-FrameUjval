@@ -1,0 +1,91 @@
+const http = require("http");
+const url = require("url");
+const fs = require("fs");
+const path = require("path");
+
+const server = http.createServer((req, res) => {
+  // POST /click  
+  // Handle the Frame Signature Packet response when a button is clicked 
+  // in the frame 
+  if (req.method === "POST" && req.url === "/click") {
+    let body = "";
+
+    req.on("data", (chunk) => {
+      body += chunk.toString(); // convert Buffer to string
+    });
+
+    req.on("end", () => {
+      // Using untrusted data is fine here since a simple redirect needs no auth
+      const buttonIndex = JSON.parse(body).untrustedData.buttonIndex;
+      res.writeHead(302, {
+        Location:
+          "https://fc-dev-call.replit.app/redirect?buttonIndex=" + buttonIndex,
+      });
+      res.end();
+    });
+  } else if (req.method === "GET" && req.url.startsWith("/redirect")) {
+    const queryObject = url.parse(req.url, true).query;
+    const buttonIndex = queryObject.buttonIndex;
+
+    let redirectUrl;
+
+    switch (buttonIndex) {
+      case "1":
+        redirectUrl =
+          "https://warpcast.notion.site/Feb-1st-934e190578144aba8273b2bbdc29e5ab?pvs=74";
+        break;
+      case "2":
+        redirectUrl =
+          "https://calendar.google.com/calendar/u/0?cid=NjA5ZWM4Y2IwMmZiMWM2ZDYyMTkzNWM1YWNkZTRlNWExN2YxOWQ2NDU3NTA3MjQwMTk3YmJlZGFjYTQ3MjZlOEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t";
+        break;
+      case "3":
+        redirectUrl =
+          "https://zoom.us/j/98052336425?pwd=aFYyRk9ZSDhqR1h5eVJENmtGSGo4UT09";
+        break;
+      case "4":
+        redirectUrl =
+          "https://www.youtube.com/playlist?list=PL0eq1PLf6eUeZnPtyKMS6uN9I5iRIlnvq";
+        break;
+      default:
+        res.writeHead(404, { "Content-Type": "text/plain" });
+        res.end("Invalid button index");
+        return;
+    }
+
+    res.writeHead(302, { Location: redirectUrl });
+    res.end();
+  } else if (req.url === "/image") {
+    const imagePath = path.join(__dirname, "frame-fc.png");
+    const imageStream = fs.createReadStream(imagePath);
+    res.writeHead(200, { "Content-Type": "image/png" });
+    imageStream.pipe(res);
+  } else {
+    res.writeHead(200, { "Content-Type": "text/html" });
+    res.write(`
+      <html>
+         <head>   
+            <meta charSet="utf-8"/>
+            <meta name="viewport" content="width=device-width"/>
+            <meta property="og:title" content="FC Dev Call" />
+            <meta property='og:image' content="https://fc-dev-call.replit.app/image" />
+            <meta property="fc:frame" content="vNext" />
+            <meta property="fc:frame:image" content="https://fc-dev-call.replit.app/image" />
+            <meta property="fc:frame:button:1" content="Notes" />
+            <meta property="fc:frame:button:1:action" content="post_redirect" />
+            <meta property="fc:frame:button:2" content="Calendar" />
+            <meta property="fc:frame:button:2:action" content="post_redirect" />
+            <meta property="fc:frame:button:3" content="Zoom" />
+            <meta property="fc:frame:button:3:action" content="post_redirect" />
+            <meta property="fc:frame:button:4" content="Recordings" />
+            <meta property="fc:frame:button:4:action" content="post_redirect" />
+            <meta property="fc:frame:post_url" content="https://fc-dev-call.replit.app/click" />
+          </head>
+          <body>Custom Meta Tags Example</body>
+      </html>`);
+    res.end();
+  }
+});
+
+server.listen(3000, () => {
+  console.log("Server running on port 3000");
+});
