@@ -1,0 +1,19 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "src/index.js", // Path to your application's entry file
+        "use": "@vercel/node" // Specify the builder to use for your project
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "src/index.js" // Default route to your application's entry file
+      }
+    ],
+    "env": {
+      "API_KEY": "@your-api-key" // Define environment variables
+    }
+  }
+  
