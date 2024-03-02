@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Farcaster Frame Example</title>
+  </head>
+  <body>
+    <div id="frameContainer" style="width: 600px; height: 400px">
+      <!-- Set frame size here -->
+      <div>
+        <button
+          onclick="loadImage('https://f47nke5yr6lcihwab5nusivmqv3zwexrs5e66kd5f52vesgwwrqq.arweave.net/Lz7VE7iPliQewA9bSSKshXebEvGXSe8ofS91UkjWtGE')"
+        >
+          Evening Image
+        </button>
+        <button
+          onclick="loadImage('https://uh3jufpsrowj3do43wphdpoln5wxtgaulaooqromqfg2izldrx4a.arweave.net/ofaaFfKLrJ2N3N2ecb3Lb215mBRYHOhFzIFNpGVjjfg')"
+        >
+          Morning Image
+        </button>
+      </div>
+      <div id="imageContainer"></div>
+    </div>
+
+    <script>
+      function loadImage(url) {
+        var imageContainer = document.getElementById("imageContainer");
+        imageContainer.innerHTML = ""; // Clear previous image
+
+        var imageElement = document.createElement("img");
+        imageElement.src = url;
+        imageElement.style.maxWidth = "100%"; // Ensure image fits within container
+        imageElement.style.maxHeight = "100%"; // Ensure image fits within container
+
+        imageContainer.appendChild(imageElement);
+      }
+    </script>
+  </body>
+</html>
